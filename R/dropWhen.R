@@ -4,7 +4,7 @@
 #' @param df Data frame to column filter
 #' @param unique Boolean for whether to return only unique rows after column filtering
 #' @param requireAll Boolean as to whether you want to require all rows in a column to equal a value in `trash` before filtering the column out (TRUE).
-#' @return Returns a columnn filtered data frame
+#' @return Returns a columnn filtered data frame.  Note, does not take into account numeric, integer or character value differences (it will treat them all the same).
 #' @author Amy Paguirigan
 #' @examples
 #' df <- data.frame(this = c(NA, seq(1, 5, 1), seq(1, 5, 1)), that = rep(0, 11),
@@ -13,23 +13,20 @@
 #' @export
 dropWhen <- function(df, unique = FALSE, trash=NULL, requireAll = TRUE) {
 
-  if(requireAll == FALSE){
-    # If all the trash in a column do not have to be the same value in `trash` to be removed
-    for(i in trash){
-      # For each of the entries in the parameter `trash`
-      df[df == trash] <- NA
-        # Turn any of the values in `trash` to NA regardless of whether that column might get filtered out or not!!!
-        # This could impact the values in portions of the data frame beyond columns that would be filtered out
+  if (requireAll == FALSE){
+    # If all the values in a column do not have to be the same value in `trash` to be removed, just have to all be ONE of the values,
+    for (j in 1:ncol(df)){ # for each column in df
+      if (all(df[,j] %in% trash, na.rm = T)) {df[,j] <- NA} # if all the values in the column are in `trash` then set the values to NA so they will be removed later
     }
   }
 
-  if(is.null(trash)==F){
+  if (is.null(trash) == FALSE){
     # if trash is specified, then filter for other column content types too
-    for(j in 1:ncol(df)){
+    for (j in 1:ncol(df)){
       # For all the columns in df
-      for(i in trash){
+      for (i in trash){
           # for all the values of `trash`
-       if(all(df[j,] == i, na.rm = T)) {df[j,] <- NA}
+       if (all(df[,j] == i, na.rm = T)) {df[,j] <- NA}
           # set the values of the entire column to NA IF the entire column is equal to that value in `trash`
     }
    }
