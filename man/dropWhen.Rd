@@ -4,7 +4,8 @@
 \alias{dropWhen}
 \title{Remove columns with specific trash}
 \usage{
-dropWhen(df, unique = FALSE, trash = NULL, requireAll = TRUE)
+dropWhen(df, unique = FALSE, trash = NULL, requireAll = TRUE,
+  except = NULL)
 }
 \arguments{
 \item{df}{Data frame to column filter}
@@ -14,6 +15,8 @@ dropWhen(df, unique = FALSE, trash = NULL, requireAll = TRUE)
 \item{trash}{Character vector containing all the trash values, besides NA, for which a column can be removed}
 
 \item{requireAll}{Boolean as to whether you want to require all rows in a column to equal a value in \code{trash} before filtering the column out (TRUE).}
+
+\item{except}{Character vector containing all column names to ignore when dropping columns (these will be retained regardless of the other parameter choices).}
 }
 \value{
 Returns a columnn filtered data frame.  Note, does not take into account numeric, integer or character value differences (it will treat them all the same).
